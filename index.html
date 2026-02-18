@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,25 +11,82 @@
             box-sizing: border-box;
         }
 
+        html[data-theme="dark"] {
+            --bg-start: #1a1a2e;
+            --bg-mid: #16213e;
+            --bg-end: #0f3460;
+            --text: #fff;
+            --text-sub: #aaa;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --input-bg: rgba(255, 255, 255, 0.07);
+            --input-border: rgba(255, 255, 255, 0.15);
+            --label-color: #ccc;
+            --result-bg: rgba(255, 255, 255, 0.05);
+            --toggle-bg: #2a2a4a;
+        }
+
+        html[data-theme="light"] {
+            --bg-start: #f0f2f5;
+            --bg-mid: #e8ecf1;
+            --bg-end: #dfe6ed;
+            --text: #1a1a2e;
+            --text-sub: #666;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --input-border: rgba(0, 0, 0, 0.15);
+            --label-color: #444;
+            --result-bg: rgba(0, 0, 0, 0.04);
+            --toggle-bg: #ddd;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-mid), var(--bg-end));
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            color: #fff;
+            color: var(--text);
+            transition: background 0.4s, color 0.4s;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: var(--toggle-bg);
+            cursor: pointer;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--card-bg);
             backdrop-filter: blur(12px);
             border-radius: 20px;
             padding: 40px;
             width: 100%;
             max-width: 480px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: background 0.4s;
         }
 
         h1 {
@@ -40,9 +97,10 @@
 
         .subtitle {
             text-align: center;
-            color: #aaa;
+            color: var(--text-sub);
             font-size: 0.9rem;
             margin-bottom: 32px;
+            transition: color 0.4s;
         }
 
         .form-group {
@@ -55,23 +113,24 @@
         .form-group label {
             font-size: 0.88rem;
             font-weight: 600;
-            color: #ccc;
+            color: var(--label-color);
+            transition: color 0.4s;
         }
 
         .form-group input {
             padding: 13px 16px;
             border-radius: 12px;
-            border: 1.5px solid rgba(255, 255, 255, 0.15);
-            background: rgba(255, 255, 255, 0.07);
-            color: #fff;
+            border: 1.5px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text);
             font-size: 1rem;
             font-family: inherit;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.4s, color 0.4s;
         }
 
         .form-group input::placeholder {
-            color: #666;
+            color: var(--text-sub);
         }
 
         .form-group input:focus {
@@ -105,11 +164,12 @@
         .result {
             margin-top: 24px;
             padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--result-bg);
             border-radius: 12px;
             font-size: 0.95rem;
             line-height: 1.8;
             display: none;
+            transition: background 0.4s;
         }
 
         .result.show {
@@ -123,6 +183,8 @@
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+
     <div class="card">
         <h1>📋 정보 입력</h1>
         <p class="subtitle">이름과 주소를 입력해주세요</p>
@@ -146,6 +208,28 @@
     </div>
 
     <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.setAttribute('data-theme', 'light');
+                btn.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                btn.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        (function initTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) {
+                document.documentElement.setAttribute('data-theme', saved);
+                document.getElementById('themeBtn').textContent = saved === 'light' ? '☀️' : '🌙';
+            }
+        })();
+
         function handleSubmit() {
             const name = document.getElementById('userName').value.trim();
             const address = document.getElementById('userAddress').value.trim();
