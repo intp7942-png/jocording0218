@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이름 / 주소 입력</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #ccc;
+        }
+
+        .form-group input {
+            padding: 13px 16px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.07);
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input::placeholder {
+            color: #666;
+        }
+
+        .form-group input:focus {
+            border-color: #e94560;
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.15);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #e94560, #c23152);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .result {
+            margin-top: 24px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result span {
+            color: #e94560;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>📋 정보 입력</h1>
+        <p class="subtitle">이름과 주소를 입력해주세요</p>
+
+        <div class="form-group">
+            <label for="userName">이름</label>
+            <input type="text" id="userName" placeholder="이름을 입력하세요" maxlength="20">
+        </div>
+
+        <div class="form-group">
+            <label for="userAddress">주소</label>
+            <input type="text" id="userAddress" placeholder="주소를 입력하세요" maxlength="100">
+        </div>
+
+        <button class="submit-btn" onclick="handleSubmit()">확인</button>
+
+        <div class="result" id="result">
+            이름: <span id="outName"></span><br>
+            주소: <span id="outAddress"></span>
+        </div>
+    </div>
+
+    <script>
+        function handleSubmit() {
+            const name = document.getElementById('userName').value.trim();
+            const address = document.getElementById('userAddress').value.trim();
+
+            if (!name || !address) {
+                alert('이름과 주소를 모두 입력해주세요.');
+                return;
+            }
+
+            document.getElementById('outName').textContent = name;
+            document.getElementById('outAddress').textContent = address;
+            document.getElementById('result').classList.add('show');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') handleSubmit();
+        });
+    </script>
+</body>
+</html>
